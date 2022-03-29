@@ -22,6 +22,10 @@ export default class Produit {
     return `${this._qte} `;
   }
 
+  displayId(){
+    return `${this._id} `;
+  }
+
   pourAfficher() {
     return `--> ${this._texte} (${this._fait ? "fait" : "à faire"})`;
   }

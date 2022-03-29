@@ -13,6 +13,11 @@ const isFridgeOpen = ref();
 const products = reactive([]);
 const url ='https://webmmi.iut-tlse3.fr/~pecatte/frigo/public/19/produits';
 
+const liste = ref(null); //Ref vers la liste des produits
+
+onMounted(() => {
+    liste.value.getAllProducts()
+})
 
 
 function displayScreen(){
@@ -22,7 +27,7 @@ function displayScreen(){
 
 function frigdeDoorInteraction() {
   isFridgeOpen.value = !isFridgeOpen.value;
-  getAllProducts()
+  liste.value.getAllProducts()
 }
 
 function updateFrigo(){
@@ -31,7 +36,10 @@ function updateFrigo(){
   
 }
 
+/*
 function getAllProducts() {
+    console.log('Get de App');
+
     fetch(url)
     .then((response) => response.json())
     .then((json) => {
@@ -41,20 +49,28 @@ function getAllProducts() {
       json.forEach((product) => {
         products.push(new Produit(product.nom, product.qte, product.id));
       });
-        console.log(products);
     })
     .catch((e) => console.log(e));
+}*/
+
+function filterList(filter) {
+  liste.value.filterList(filter);
 }
 
-const liste = ref(null); //Ref vers la liste des produits
-
+function stealRandom() {
+  liste.value.stealRandom();  
+}
 
 </script>
 
 <template>
 
   <div id="frigogidaire">
-    <Freezer />
+    <Freezer
+    @stealRandom="stealRandom"
+    ></Freezer>
+
+
     <Frigo
       @displayScreen="displayScreen"
       @frigdeDoorInteraction="frigdeDoorInteraction"
@@ -65,14 +81,13 @@ const liste = ref(null); //Ref vers la liste des produits
 
   
   <Screen v-if="screenDisplay"
-  @updateFridgeDisplay="updateFrigo" />
+  @updateFridgeDisplay="updateFrigo"
+  @search="filterList"
+  />
 
 
 
 </template>
-
-
-
 
 <style >
 @import "./assets/base.css";

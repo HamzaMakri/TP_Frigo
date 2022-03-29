@@ -50,22 +50,22 @@ const open = ref(false);
 const url = "https://webmmi.iut-tlse3.fr/~pecatte/frigo/public/19/produits";
 
 const data = reactive({
-  products: []
+  products: [],
 });
 
-defineExpose({ // On expose la méthode 'refresh' pour être utilisée par le parent
+defineExpose({
+  // On expose les méthodes pour être utilisée par le parent
   getAllProducts,
-})
-
+  filterList,
+  stealRandom,
+});
 
 function getAllProducts() {
   fetch(url)
     .then((response) => response.json())
     .then((json) => {
       console.log(json);
-
       data.products.splice(0, data.products.length);
-
       json.forEach((product) => {
         data.products.push(new Produit(product.nom, product.qte, product.id));
       });
@@ -74,30 +74,69 @@ function getAllProducts() {
     .catch((e) => console.log(e));
 }
 
+function filterList(filter) {
+  fetch(url + "?search=" + filter)
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(json);
+      data.products.splice(0, data.products.length);
+      json.forEach((product) => {
+        data.products.push(new Produit(product.nom, product.qte, product.id));
+      });
+      console.log(data.products);
+    })
+    .catch((e) => console.log(e));
+}
 
 function minusOne(product) {
-    product.minusOne(url);
-      getAllProducts();
-
+  product.minusOne(url);
+  setTimeout(() => {
+    getAllProducts();
+  }, 100);
 }
 
 function plusOne(product) {
   product.plusOne(url);
+  setTimeout(() => {
     getAllProducts();
-
+  }, 100);
 }
 
 function deleteProduct(product) {
   product.deleteSelf(url);
+  setTimeout(() => {
     getAllProducts();
-
+  }, 100);
 }
 
 function door() {
   open.value = !open.value;
-  getAllProducts();
+  //getAllProducts();
 }
 
+function stealRandom() {
+  if (data.products.length > 0) {
+    let randomNb = Math.floor(Math.random() * data.products.length);
+    let randomId = data.products[randomNb].displayId();
+
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const fetchOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+    };
+
+    fetch(url + "/" + randomId, fetchOptions)
+      .then((result) => result.json())
+      .then((json) => {
+        if (json.status == 1) {
+          //update la liste
+          getAllProducts();
+        }
+      })
+      .catch((e) => console.log(e));
+  }
+}
 </script>
 
 
@@ -106,12 +145,18 @@ function door() {
   position: absolute;
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
+  overflow-y: scroll; /* Add the ability to scroll */
 
   width: 370px;
   height: 570px;
   top: 2px;
 
   padding-top: 10%;
+}
+
+#productContainer::-webkit-scrollbar {
+  display: none;
 }
 
 #productContainer:first-child:nth-last-child(26),
@@ -127,11 +172,11 @@ function door() {
   background-color: beige;
 }
 
-#fridgeDoor:hover{
+#fridgeDoor:hover {
   cursor: grab;
 }
 
-#fridgeBody_closed:hover{
+#fridgeBody_closed:hover {
   cursor: grab;
 }
 
@@ -186,7 +231,6 @@ function door() {
   justify-content: center;
 }
 
-
 .trapeze {
   top: 20px;
   left: 50%;
@@ -210,10 +254,9 @@ function door() {
   background-color: black;
 }
 
-#miniScreen:hover{
+#miniScreen:hover {
   cursor: pointer;
-    box-shadow: 0px 0px 20px 5px rgb(250, 247, 247);
-
+  box-shadow: 0px 0px 20px 5px rgb(250, 247, 247);
 }
 </style>
  
