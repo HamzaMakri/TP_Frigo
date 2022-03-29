@@ -8,7 +8,9 @@
 
 
 
-    <div @click="door()" id="freezerDoor"></div>
+    <div @click="door()" id="freezerDoor">
+            <audio id="audio" src="../assets/generique-oggy-et-les-cafards-gaumont.mp3"></audio>
+    </div>
 
 
 
@@ -28,6 +30,7 @@ console.log(open.value);
 function door() {
   console.log("bjfehbrf");
   open.value = !open.value;
+  
 }
 </script>
 

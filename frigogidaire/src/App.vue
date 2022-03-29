@@ -25,15 +25,19 @@ function frigdeDoorInteraction() {
   getAllProducts()
 }
 
+function updateFrigo(){
+  console.log(liste);
+  liste.value.getAllProducts();
+  
+}
+
 function getAllProducts() {
     fetch(url)
     .then((response) => response.json())
     .then((json) => {
 
       console.log(json);
-
       products.splice(0, products.length);
-
       json.forEach((product) => {
         products.push(new Produit(product.nom, product.qte, product.id));
       });
@@ -41,6 +45,8 @@ function getAllProducts() {
     })
     .catch((e) => console.log(e));
 }
+
+const liste = ref(null); //Ref vers la liste des produits
 
 
 </script>
@@ -52,14 +58,16 @@ function getAllProducts() {
     <Frigo
       @displayScreen="displayScreen"
       @frigdeDoorInteraction="frigdeDoorInteraction"
+      ref="liste"
     ></Frigo>
 
   </div>
 
   
-  <Screen v-if="screenDisplay" />
+  <Screen v-if="screenDisplay"
+  @updateFridgeDisplay="updateFrigo" />
 
-  
+
 
 </template>
 
@@ -75,9 +83,6 @@ function getAllProducts() {
   align-items: center;
   
 }
-
-
-
 
 h1{
   color: aquamarine;

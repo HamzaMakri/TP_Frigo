@@ -8,7 +8,7 @@
 
       <div id="productContainer">
         <CaseProduit
-          v-for="product in products"
+          v-for="product in data.products"
           :key="product.id"
           :product="product"
           @minus="() => minusOne(product)"
@@ -47,33 +47,15 @@ import CaseProduit from "./subComponents/TemplateProductInFridge.vue";
 import { reactive, onMounted } from "vue";
 
 const open = ref(false);
-const products = reactive([]);
 const url = "https://webmmi.iut-tlse3.fr/~pecatte/frigo/public/19/produits";
 
+const data = reactive({
+  products: []
+});
 
-
-
-function minusOne(product) {
-    product.minusOne(url);
-
-}
-
-function plusOne(product) {
-  product.plusOne(url);
-}
-
-function deleteProduct(product) {
-  product.deleteSelf(url);
-}
-
-function door() {
-  open.value = !open.value;
-  getAllProducts();
-}
-
-
-
-
+defineExpose({ // On expose la méthode 'refresh' pour être utilisée par le parent
+  getAllProducts,
+})
 
 
 function getAllProducts() {
@@ -82,15 +64,40 @@ function getAllProducts() {
     .then((json) => {
       console.log(json);
 
-      products.splice(0, products.length);
+      data.products.splice(0, data.products.length);
 
       json.forEach((product) => {
-        products.push(new Produit(product.nom, product.qte, product.id));
+        data.products.push(new Produit(product.nom, product.qte, product.id));
       });
-      console.log(products);
+      console.log(data.products);
     })
     .catch((e) => console.log(e));
 }
+
+
+function minusOne(product) {
+    product.minusOne(url);
+      getAllProducts();
+
+}
+
+function plusOne(product) {
+  product.plusOne(url);
+    getAllProducts();
+
+}
+
+function deleteProduct(product) {
+  product.deleteSelf(url);
+    getAllProducts();
+
+}
+
+function door() {
+  open.value = !open.value;
+  getAllProducts();
+}
+
 </script>
 
 
@@ -118,6 +125,14 @@ function getAllProducts() {
   height: 600px;
   border-radius: 4%;
   background-color: beige;
+}
+
+#fridgeDoor:hover{
+  cursor: grab;
+}
+
+#fridgeBody_closed:hover{
+  cursor: grab;
 }
 
 #openedFridge {
@@ -171,8 +186,6 @@ function getAllProducts() {
   justify-content: center;
 }
 
-.frigo {
-}
 
 .trapeze {
   top: 20px;
@@ -195,6 +208,12 @@ function getAllProducts() {
   width: 20%;
   height: 20%;
   background-color: black;
+}
+
+#miniScreen:hover{
+  cursor: pointer;
+    box-shadow: 0px 0px 20px 5px rgb(250, 247, 247);
+
 }
 </style>
  
