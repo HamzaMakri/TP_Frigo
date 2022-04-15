@@ -9,7 +9,7 @@
 
     <div id="filter">
       <h2>Rechercher :</h2>
-      <input type="text" v-model="filter" @change="emit('search', filter)" />
+      <input id="searchBar" type="text" v-model="filter" @change="emit('search', filter)" />
     </div>
   </div>
 </template>
@@ -52,40 +52,38 @@ function addNewProduct() {
 
 <style>
 
-input[type=text] {
+input {
   border: 2px solid rgb(114, 114, 114);
   border-radius: 4px;
   text-align: center;
   color: rgb(192, 192, 192);;
   background-color: black;
-
-}
-
-input[type=number] {
-  border: 2px solid rgb(114, 114, 114);
-  border-radius: 4px;
-  text-align: center;
-  color: rgb(192, 192, 192);;
-  background-color: black;
+  margin: 5px;
 }
 
 #filter {
   height: 50%;
   width: 100%;
-  background-color: rgb(100, 53, 9);
 }
 
 #add {
   height: 50%;
   width: 100%;
-  background-color: blueviolet;
 }
 
 #screen {
   height: 500px;
   width: 350px;
-  background-color: aquamarine;
+  background-color: rgb(0, 0, 0);
   margin: 20px;
+  border-radius: 2%;
+  border: solid 2px rgb(104, 104, 104);
+  
+}
+
+#screen:hover{
+    box-shadow: 0px 0px 20px 5px rgb(99, 99, 99);
+
 }
 
 #screen * {

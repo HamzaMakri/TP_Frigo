@@ -60,6 +60,7 @@ defineExpose({
   stealRandom,
 });
 
+// Appel API pour recuperer la liste des produits
 function getAllProducts() {
   fetch(url)
     .then((response) => response.json())
@@ -69,11 +70,11 @@ function getAllProducts() {
       json.forEach((product) => {
         data.products.push(new Produit(product.nom, product.qte, product.id));
       });
-      console.log(data.products);
     })
     .catch((e) => console.log(e));
 }
 
+// Met à jour la liste des produits avec les produits dont le nom contient le filtre passé en parametre
 function filterList(filter) {
   fetch(url + "?search=" + filter)
     .then((response) => response.json())
@@ -88,32 +89,41 @@ function filterList(filter) {
     .catch((e) => console.log(e));
 }
 
+// Supprime un produit passé en parametre
+// Petit time out pour laisser le temps à l'appel API asynchrone de se terminer
 function minusOne(product) {
+  document.getElementById("");
   product.minusOne(url);
   setTimeout(() => {
-    getAllProducts();
+    filterList(document.getElementById("searchBar").value); // On appel la fonction filter et non getAllProducts afin de garder la frigo filtré apres la soustraction d'une quantité d'un produit
   }, 100);
 }
 
+// Ajoute un produit passé en parametre
+// Petit time out pour laisser le temps à l'appel API asynchrone de se terminer
 function plusOne(product) {
   product.plusOne(url);
   setTimeout(() => {
-    getAllProducts();
+    filterList(document.getElementById("searchBar").value); // On appel la fonction filter et non getAllProducts afin de garder la frigo filtré apres l'ajout d'une quantité d'un produit
   }, 100);
 }
 
+// Supprime un produit passé en parametre
+// Petit time out pour laisser le temps à l'appel API asynchrone de se terminer
 function deleteProduct(product) {
   product.deleteSelf(url);
   setTimeout(() => {
-    getAllProducts();
+    filterList(document.getElementById("searchBar").value); // On appel la fonction filter et non getAllProducts afin de garder la frigo filtré apres la suppression du produit
   }, 100);
 }
 
+// Inverse la valeur du boolean
 function door() {
   open.value = !open.value;
-  //getAllProducts();
 }
 
+// Genere un nombre aléatoire entre 0 et le nombre de produit dans la liste
+// Recupere le produit et le supprime
 function stealRandom() {
   if (data.products.length > 0) {
     let randomNb = Math.floor(Math.random() * data.products.length);
@@ -245,6 +255,8 @@ function stealRandom() {
 }
 
 #miniScreen {
+  border-radius: 10%;
+
   position: absolute;
   right: 15%;
   bottom: 50%;
@@ -257,6 +269,10 @@ function stealRandom() {
 #miniScreen:hover {
   cursor: pointer;
   box-shadow: 0px 0px 20px 5px rgb(250, 247, 247);
+  background-image: url(../assets/tactile.png);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 </style>
  

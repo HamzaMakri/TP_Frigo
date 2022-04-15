@@ -7,9 +7,11 @@ export default class Produit {
   get nom() {
     return this._nom;
   }
+  
   get id() {
     return this._id;
   }
+
   get qte() {
     return this._qte;
   }

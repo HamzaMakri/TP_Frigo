@@ -24,15 +24,14 @@ import { ref } from "vue";
 import sound from "../assets/generique-oggy-et-les-cafards-gaumont.mp3";
 
 const open = ref(false);
-console.log(open.value);
+const emit = defineEmits(["stealRandom"]); // Definition des fonctions du parent à utiliser
+
 const audio = new Audio(sound);
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-const emit = defineEmits(["stealRandom"]);
-
+// Change la valeur du boolean et lance/coupe la musique
 function door() {
   open.value = !open.value;
-
   if (open.value) {
     audio.play();
     razia();
@@ -41,16 +40,19 @@ function door() {
   }
 }
 
+// Fonction asynchrone pour supprimer un produit au hasard sans stopper le fonctionnement du site
 async function razia() {
   while (open.value) {
     emit("stealRandom");
     await sleep(6000);
   }
 }
+
 </script>
 
 
 <style scoped>
+
 #cafardosContainer {
   position: relative;
 }
@@ -121,6 +123,14 @@ async function razia() {
   outline-offset: -20px;
 }
 
+#freezerDoor:hover {
+  cursor: grab;
+}
+
+#freezerBody_closed:hover {
+  cursor: grab;
+}
+
 #closedFreezer {
   display: flex;
   justify-content: center;
@@ -142,5 +152,7 @@ async function razia() {
   border-right: 40px solid transparent;
   box-shadow: 0px 3px 5px 0px rgb(255, 255, 255);
 }
+
+
 </style>
  
